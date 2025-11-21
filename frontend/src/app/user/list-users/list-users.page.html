@@ -1,0 +1,76 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>User List</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Bicycle List</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-button type="submit" color="warning" (click)="logout()">
+    LOGOUT
+  </ion-button>
+
+  <ion-button type="submit" color="warning" (click)="goToBicycles()">
+    BICYCLES
+  </ion-button>
+
+  <ion-card color="secondary">
+    <ion-card-header>
+      <ion-item color="secondary" lines="none">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-card-title>ID</ion-card-title>
+            </ion-col>
+            <ion-col>
+              <ion-card-title>USERNAME</ion-card-title>
+            </ion-col>
+            <ion-col>
+              <ion-card-title>isAdmin</ion-card-title>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list [inset]="true">
+        <ion-item *ngFor="let b of users" color="light">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-label>{{b.id}}</ion-label>
+              </ion-col>
+              <ion-col>
+                <ion-label>{{b.username}}</ion-label>
+              </ion-col>
+              <ion-col>
+                <ion-label>{{b.isAdmin}}</ion-label>
+              </ion-col>
+              <!-- <ion-button fill="clear" (click)="update(b)">
+                <ion-icon name="create-outline"></ion-icon>
+                Editar
+              </ion-button>
+              <ion-button color="danger" fill="clear" (click)="delete(b.id)">
+                <ion-icon name="trash-outline"></ion-icon>
+                Borrar
+              </ion-button> -->
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- DECOMMENT: -->
+  <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="addBicycle()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content> -->

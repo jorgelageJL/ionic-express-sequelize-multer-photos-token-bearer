@@ -1,0 +1,69 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Add Bicycle</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Add Bicycle</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-button type="submit" color="warning" (click)="logout()">
+    LOGOUT
+  </ion-button>
+
+  <ion-button type="submit" color="warning" (click)="goToBicycles()">
+    BICYCLES
+  </ion-button>
+
+  <ion-button type="submit" color="warning" (click)="goToUsers()">
+    USERS
+  </ion-button>
+
+  <ion-grid>
+    <ion-row class="ion-align-items-center">
+      <ion-col size="6">
+        <ion-img class="photo-frame" *ngIf="capturedPhoto" [src]="capturedPhoto" (click)="takePhoto()"></ion-img>
+        <ion-img class="photo-frame" *ngIf="!capturedPhoto" src="../../assets/No-Image-Placeholder.svg"
+          (click)="takePhoto()"></ion-img>
+      </ion-col>
+      <ion-col size="6">
+        <ion-button color="primary" fill="outline" (click)="takePhoto()">
+          <ion-icon slot="start" name="camera-outline"></ion-icon>
+          Take a photo
+        </ion-button>
+        <ion-button color="primary" fill="outline" (click)="pickImage()">
+          <ion-icon slot="start" name="image-outline"></ion-icon>
+          Pick an image
+        </ion-button>
+        <ion-button color="danger" fill="outline" (click)="discardImage()">
+          <ion-icon slot="start" name="aperture"></ion-icon>
+          Discard image
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <form [formGroup]="bicycleForm">
+    <ion-item lines="full">
+      <ion-input type="text" formControlName="brand" label="Marca" label-placement="floating" placeholder="Enter text" required></ion-input>
+      <ion-text *ngIf="bicycleForm.get('brand')?.touched && bicycleForm.get('brand')?.hasError('required')">
+        obligatorio
+      </ion-text>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-input type="text" formControlName="model" label="Modelo" label-placement="floating" placeholder="Enter text" required></ion-input>
+      <ion-text *ngIf="bicycleForm.get('model')?.touched && bicycleForm.get('model')?.hasError('required')">
+        obligatorio
+      </ion-text>
+    </ion-item>
+    <ion-row>
+      <ion-col>
+        <ion-button type="submit" (click)="create()" color="primary" expand="block">AÑADIR</ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>
