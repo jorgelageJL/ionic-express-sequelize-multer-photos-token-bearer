@@ -1,4 +1,4 @@
-# Ionic + Express + Sequelize + Multer Example
+# Ionic + Express + Sequelize + Multer + Token Bearer
 
 This is a basic example using Ionic + Express + Sequelize + Multer that shows how to upload/download images using Multer.
 
