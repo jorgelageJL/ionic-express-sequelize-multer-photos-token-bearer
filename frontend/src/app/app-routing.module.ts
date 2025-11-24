@@ -1,22 +1,27 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes, CanActivate } from '@angular/router';
+import { AuthService } from './services/auth.service';
 
 const routes: Routes = [
   {
     path: 'list-bicycles',
-    loadChildren: () => import('./bicycle/list-bicycles/list-bicycles.module').then( m => m.ListBicyclesPageModule)
+    loadChildren: () => import('./bicycle/list-bicycles/list-bicycles.module').then( m => m.ListBicyclesPageModule),
+    canActivate: [AuthService]
   },
   {
     path: 'add-bicycle',
-    loadChildren: () => import('./bicycle/add-bicycle/add-bicycle.module').then( m => m.AddBicyclePageModule)
+    loadChildren: () => import('./bicycle/add-bicycle/add-bicycle.module').then( m => m.AddBicyclePageModule),
+    canActivate: [AuthService]
   },
   {
     path: 'list-users',
-    loadChildren: () => import('./user/list-users/list-users.module').then( m => m.ListUsersPageModule)
+    loadChildren: () => import('./user/list-users/list-users.module').then( m => m.ListUsersPageModule),
+    canActivate: [AuthService]
   },
   {
     path: 'add-user',
-    loadChildren: () => import('./user/add-user/add-user.module').then( m => m.AddUserPageModule)
+    loadChildren: () => import('./user/add-user/add-user.module').then( m => m.AddUserPageModule),
+    canActivate: [AuthService]
   },
   {
     path: 'login',

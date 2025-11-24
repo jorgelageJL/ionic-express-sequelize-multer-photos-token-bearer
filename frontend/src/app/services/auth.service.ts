@@ -1,18 +1,23 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { User } from '../auth/user';
 import { AuthResponse } from '../auth/auth-response';
 import { Observable, tap } from 'rxjs';
 import { Storage } from '@ionic/storage-angular'
+import { CanActivate, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements CanActivate {
   initializedStorage: boolean = false;
-  AUTH_SERVER_ADDRESS: string = 'http://localhost:8080';
+  AUTH_SERVER_ADDRESS: string = 'http://localhost:8080/api/users';
 
-  constructor(private httpClient: HttpClient, private storage: Storage) { 
+  constructor(
+    private httpClient: HttpClient,
+    private storage: Storage,
+    private router: Router
+  ) { 
     this.initializeStorage();
   }
 
@@ -25,7 +30,7 @@ export class AuthService {
     return this.initializedStorage;
   }
 
-  private getOptions(user: User) {
+  private getBasicHeaders(user: User) {
     let base64UserAndPassword = window.btoa(user.username + ":" + user.password);
 
     let basicAccess = 'Basic ' + base64UserAndPassword;
@@ -41,8 +46,33 @@ export class AuthService {
     return options;
   }
 
+  public getBearerHeaders(token: any) {
+    let bearerAccess = 'Bearer ' + token;
+
+    let options = {
+      headers: {
+        'Authorization': token ? bearerAccess : '',
+        // 'Content-Type' : 'application/json',
+      }
+      , withCredentials: true
+    };
+
+    return options;
+  }
+
+  async canActivate(): Promise<boolean> {
+    const loggedIn = await this.isLoggedIn();
+
+    if (!loggedIn) {
+      this.router.navigateByUrl('login');
+      return false;
+    }
+
+    return true;
+  }
+
   register(user: User): Observable<AuthResponse> {
-    return this.httpClient.post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}/api/users/`, user, this.getOptions(user)).pipe(
+    return this.httpClient.post<AuthResponse>(this.AUTH_SERVER_ADDRESS, user, this.getBasicHeaders(user)).pipe(
       tap(async (res: AuthResponse) => {
 
         if (res.user) {
@@ -54,7 +84,7 @@ export class AuthService {
   }
 
   login(user: User): Observable<AuthResponse> {
-    return this.httpClient.post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}/api/users/signin`, null, this.getOptions(user)).pipe(
+    return this.httpClient.post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}/signin`, null, this.getBasicHeaders(user)).pipe(
       tap(async (res: AuthResponse) => {
 
         if (res.user) {
@@ -66,6 +96,7 @@ export class AuthService {
 
   async logout() {
     await this.storage.remove("token");
+    this.router.navigateByUrl("login");
   }
 
   async getToken() {

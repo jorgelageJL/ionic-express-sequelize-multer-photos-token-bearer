@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BicycleService } from '../../services/bicycle.service';
 import { PhotoService } from '../../services/photo.service';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+// import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -16,20 +16,20 @@ export class AddBicyclePage implements OnInit {
   bicycleForm: FormGroup;
   // isSubmitted: boolean = false;
   capturedPhoto: string = "";
+  originalImage: string = "";
 
   constructor(
     private bicycleService: BicycleService,
     private router: Router,
-    private route: ActivatedRoute,
+    // private route: ActivatedRoute,
     public formBuilder: FormBuilder,
     private photoService: PhotoService,
     private authService: AuthService,
   ) {
-    this.checkIfLogin();
     this.bicycleForm = this.formBuilder.group({
       id: null,
-      brand: ['', [Validators.required]],
-      model: ['', [Validators.required]],
+      brand: ['', Validators.required],
+      model: ['', Validators.required],
       filename: ''
     })
     this.updateBicycleForm();
@@ -48,6 +48,7 @@ export class AddBicyclePage implements OnInit {
         filename: this.bicycle.filename,
       })
       this.capturedPhoto = `http://localhost:8080/images/${this.bicycle.filename}`
+      this.originalImage = `http://localhost:8080/images/${this.bicycle.filename}`
     }
     // console.log(this.bicycleForm.value)
   }
@@ -88,49 +89,35 @@ export class AddBicyclePage implements OnInit {
       && Object.is(this.bicycle.filename, this.bicycleForm.value.filename)
   }
 
-  update(/*blob: any*/) {
-    // console.log(this.bicycleForm.value)
-    this.bicycleService.updateBicycle(this.bicycleForm.value/*, blob*/).subscribe(data => {
-      // console.log("Photo sent!");
-      this.router.navigateByUrl("/list-bicycles");
-    })
+  imageChanged() {
+    // Si capturedPhoto existe y su filename es diferente al original
+    return this.capturedPhoto && this.capturedPhoto != this.originalImage;
   }
 
   async create() {
-    console.log(this.bicycleForm.value)
-    // const equals = this.areEquals();
+    // console.log(this.bicycleForm.value)
     if (!this.bicycleForm.valid || this.capturedPhoto === "") {
       console.log('Please provide all the required values!')
       return;
     }
-    if (this.bicycleForm.value.filename != '') {
-      return this.update(/*blob*/);
-    }
-    // console.log(`anterior: ${this.bicycle}`)
-    // console.log(this.bicycleForm.value)
     // DECOMMENT:
-    let blob = null;
-    const response = await fetch(this.capturedPhoto);
-    blob = await response.blob();
-    
+    let blob: any = null;
+    if (this.imageChanged()) {
+      const response = await fetch(this.capturedPhoto);
+      blob = await response.blob();
+    }
 
-    this.bicycleService.createBicycle(this.bicycleForm.value, blob).subscribe(data => {
-      // console.log("Photo sent!");
-      this.router.navigateByUrl("/list-bicycles");
-    })
+    if (this.bicycleForm.value.filename) {
+      await this.bicycleService.updateBicycle(this.bicycleForm.value, blob);
+    } else {
+      await this.bicycleService.createBicycle(this.bicycleForm.value, blob);
+    }
+    
+    this.router.navigateByUrl("list-bicycles");
   }
 
   logout() {
     this.authService.logout()
-    this.router.navigateByUrl("login");
-  }
-
-  checkIfLogin() {
-    this.authService.isLoggedIn().then(loggedIn => {
-      if (!loggedIn) {
-        this.router.navigateByUrl("login");
-      } 
-    })
   }
   
   goToBicycles() {

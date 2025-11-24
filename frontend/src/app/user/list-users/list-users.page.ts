@@ -15,9 +15,7 @@ export class ListUsersPage implements OnInit {
     private userService: UserService,
     private router: Router,
     private authService: AuthService
-  ) {
-    this.checkIfLogin();
-  }
+  ) {}
 
   async getAll() {
     this.users = await this.userService.getUsers();
@@ -29,15 +27,6 @@ export class ListUsersPage implements OnInit {
 
   logout() {
     this.authService.logout()
-    this.router.navigateByUrl("login");
-  }
-
-  checkIfLogin() {
-    this.authService.isLoggedIn().then(loggedIn => {
-      if (!loggedIn) {
-        this.router.navigateByUrl("login");
-      } 
-    })
   }
 
   goToBicycles() {

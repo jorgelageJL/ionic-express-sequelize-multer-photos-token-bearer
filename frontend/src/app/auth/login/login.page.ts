@@ -35,7 +35,7 @@ export class LoginPage implements OnInit {
           this.presentAlert("invalid credentials");
           return;
         }
-        this.router.navigateByUrl('/list-bicycles');
+        this.router.navigateByUrl('list-bicycles');
         form.reset();
       },
       error: err => {

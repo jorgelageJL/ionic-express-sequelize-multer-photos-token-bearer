@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BicycleService } from '../../services/bicycle.service';
 import { Router } from '@angular/router';
+// import { Bicycle } from '../../auth/bicycle';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -16,13 +17,11 @@ export class ListBicyclesPage implements OnInit {
     private router: Router,
     private authService: AuthService,
   ) {
-    this.checkIfLogin();
+    // this.checkIfLogin();
   }
 
-  getAll() {
-    this.bicycleService.getAllBicycles().subscribe(response => {
-      this.bicycles = response;
-    });
+  async getAll() {
+    this.bicycles = await this.bicycleService.getAllBicycles();
   }
 
   ionViewWillEnter() {
@@ -31,15 +30,14 @@ export class ListBicyclesPage implements OnInit {
 
   update(bicycle: any) {
     // console.log(bicycle)
-    this.router.navigate(['/add-bicycle'], {
+    this.router.navigate(['add-bicycle'], {
       state: { bicycle }
     });
   }
 
-  delete(id: string) {
-    this.bicycleService.deleteBicycle(id).subscribe(() => {
-      this.getAll();
-    });
+  async delete(id: string) {
+    await this.bicycleService.deleteBicycle(id);
+    this.getAll();
   }
   // DECOMMENT:
   addBicycle(){
@@ -48,15 +46,6 @@ export class ListBicyclesPage implements OnInit {
 
   logout() {
     this.authService.logout()
-    this.router.navigateByUrl("login");
-  }
-  
-  checkIfLogin() {
-    this.authService.isLoggedIn().then(loggedIn => {
-      if (!loggedIn) {
-        this.router.navigateByUrl("login");
-      } 
-    })
   }
 
   goToUsers() {

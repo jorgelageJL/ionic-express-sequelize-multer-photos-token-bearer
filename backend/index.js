@@ -3,7 +3,7 @@ const cors = require("cors");
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 // DECOMMENT:
-var path = require('path');
+let path = require('path');
 
 const app = express();
 
@@ -13,12 +13,21 @@ const app = express();
 let corsOptions = {
   origin: 'http://localhost:8100',
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  // allowedHeaders: ['Content-Type', 'Authorization'],
+  // methods: ['GET', 'POST', 'PUT', 'DELETE'],
 };
 
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors(corsOptions));
+// Servir /public
+app.use(express.static(path.join(__dirname, 'public')));
+// CORS para /images
+app.use('/images', (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  next();
+});
+// Servir la carpeta /images
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());

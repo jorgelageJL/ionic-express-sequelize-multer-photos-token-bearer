@@ -28,24 +28,10 @@ export class UserService {
     return this.initializedStorage;
   }
 
-  private getOptions(token: any) {
-    let bearerAccess = 'Bearer ' + token;
-
-    let options = {
-      headers: {
-        'Authorization': token ? bearerAccess : '',
-        'Content-Type' : 'application/json',
-      }
-      , withCredentials: true
-    };
-
-    return options;
-  }
-
   async getUsers() {
     const token = await this.authService.getToken();
     // console.log('TOKEN: ', token);
-    const options = this.getOptions(token);
+    const options = this.authService.getBearerHeaders(token);
     // console.log('OPTIONS: ', options);
 
     return firstValueFrom(
