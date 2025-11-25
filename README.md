@@ -9,7 +9,7 @@ It captures images in Ionic, and pick photos up as well using Ionic Capacitor.
 Clone this respository.
 
 ```
-git clone https://github.com/tcrurav/ionic-express-sequelize-multer-photos.git
+git clone https://github.com/jorgelageJL/ionic-express-sequelize-multer-photos-token-bearer.git
 ```
 
 Create MySQL database and configure database in ionic-express-sequelize-multer-photos/backend/config/db.config.js
