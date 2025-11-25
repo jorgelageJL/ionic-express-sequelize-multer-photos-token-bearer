@@ -19,6 +19,10 @@ Install dependencies and run backend:
 ```
 cd ionic-express-sequelize-multer-photos/backend
 npm install
+npm install dotenv
+npm install cors
+npm install jsonwebtoken
+npm install bcryptjs
 node index.js
 ```
 
@@ -27,6 +31,8 @@ Install dependencies and run frontend:
 ```
 cd ionic-express-sequelize-multer-photos/frontend
 npm install
+npm install @capacitor/camera@6
+npm install @ionic/storage-angular
 ionic serve
 ```
 
